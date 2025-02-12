@@ -1,24 +1,25 @@
 from django.db import models
 import uuid
 from django.contrib.auth.models import User
+
 income_category = [
-        ('salary', 'Salary'),
-        ('freelance', 'Freelance'),
-        ('investments', 'Investments'),
-        ('gifts', 'Gifts'),
-    ]
+    ('salary', 'Salary'),
+    ('freelance', 'Freelance'),
+    ('investments', 'Investments'),
+    ('gifts', 'Gifts'),
+]
+
 expense_categories = [
     ('rent', 'Rent'),
     ('food', 'Food'),
     ('transport', 'Transport'),
-    ('entertaiment', 'Entertaiment'),
+    ('entertainment', 'Entertainment'),
 ]
 
 TRANSACTION_TYPES = [
-        ('income', 'Income'),
-        ('expense', 'Expense'),
-    ]
-
+    ('income', 'Income'),
+    ('expense', 'Expense'),
+]
 
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True)
