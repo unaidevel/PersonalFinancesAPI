@@ -2,14 +2,13 @@ from rest_framework import serializers
 from finances.models import Category, Transaction, Budget
 from django.utils import timezone
 
+
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['id', 'name', 'category_type']
 
     
-
-
 
 class BudgetSerializer(serializers.ModelSerializer):
 
@@ -27,9 +26,9 @@ class BudgetSerializer(serializers.ModelSerializer):
     #         raise serializers.ValidationError('You can only create budget for yourself')
     #     return value
     
-    # def create(self, validated_data):
-    #     validated_data['user'] = self.context['request'].user
-    #     return super().create(validated_data)
+    def create(self, validated_data):
+        validated_data['user'] = self.context['request'].user
+        return super().create(validated_data)
 
 class TransactionSerializer(serializers.ModelSerializer):
 
@@ -48,6 +47,6 @@ class TransactionSerializer(serializers.ModelSerializer):
     #     return value
     
 
-    # def create(self, validated_data):
-    #     validated_data['user'] = self.context['request'].user
-    #     return super().create(validated_data)
+    def create(self, validated_data):
+        validated_data['user'] = self.context['request'].user
+        return super().create(validated_data)

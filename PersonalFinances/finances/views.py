@@ -13,6 +13,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 
 
+#ViewSet
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -63,9 +64,14 @@ class BudgetView(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Budget.objects.filter(user=self.request.user)
+    
 
-
-
+    @action(detail=True, methods=['GET'])
+    def transactions(self, request, pk=None):
+        budget = self.get_object()
+        transacations = budget.transactions.all()
+        serializer = TransactionSerializer(transacations, many=True)
+        return Response(serializer.data)
 
 
 class FacebookLogin(SocialLoginView):

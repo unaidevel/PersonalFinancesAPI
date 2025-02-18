@@ -3,7 +3,7 @@ import uuid
 from django.contrib.auth.models import User
 from django.db.models import Sum
 from django.core.exceptions import ValidationError
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
 
@@ -33,31 +33,6 @@ class Category(models.Model):
     def __str__(self):
         return f'{self.name}'
 
-class Transaction(models.Model):
-    id = models.UUIDField(default=uuid.uuid4, primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    budget = models.ForeignKey('Budget', on_delete=models.CASCADE, related_name='transactions', null=True, blank=True)
-    transaction_type = models.CharField(choices=TRANSACTION_TYPES, default=None, max_length=15)
-    amount = models.IntegerField()
-    date_created = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f'Transaction of {self.amount} done.'
-    
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-
-        budgets = Budget.objects.filter(category=self.category, user=self.user)
-        for budget in budgets:
-
-            total_expenses = budget.transactions.aggregate(Sum('amount'))['amount__sum'] or 0
-            budget.remaining_budget = budget.total_amount - total_expenses
-            budget.save()
-    
-
-
 class Budget(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True)
     name = models.CharField(max_length=100)
@@ -83,13 +58,30 @@ class Budget(models.Model):
         super().save(*args, **kwargs)
 
 
-    def remaining_budget(self):
+    def update_remaining_budget(self):
         transactions = Transaction.objects.filter(budget=self)
         total_spent = transactions.aggregate(Sum('amount'))['amount__sum'] or 0
         self.remaining_budget = self.total_amount - total_spent
         self.save()
 
+
+class Transaction(models.Model):
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    budget = models.ForeignKey('Budget', on_delete=models.CASCADE, related_name='transactions', null=True, blank=True)
+    transaction_type = models.CharField(choices=TRANSACTION_TYPES, default=None, max_length=15)
+    amount = models.IntegerField()
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Transaction of {self.amount} done.'
+    
+
+
 @receiver(post_save, sender=Transaction)
-def update_remaining_budget(sender, instance, **kwargs):
+@receiver(post_delete, sender=Transaction)
+def update_budget_remaining(sender, instance, **kwargs):
     if instance.budget:
-        instance.budget.remaining_budget()
+        instance.budget.update_remaining_budget()
+
