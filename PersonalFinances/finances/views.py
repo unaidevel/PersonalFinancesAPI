@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from finances.models import Category, Transaction, Budget
-from finances.serializers import CategorySerializer, TransactionSerializer, BudgetSerializer
+from finances.models import Category, Transaction, Budget, RecurringTransaction
+from finances.serializers import CategorySerializer, TransactionSerializer, BudgetSerializer, Recurring_TransactionSerializer
 from rest_framework import permissions
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from allauth.socialaccount.providers.github.views import GitHubOAuth2Adapter
@@ -48,12 +48,12 @@ class TransactionViewSet(viewsets.ModelViewSet):
     def filter_by_type(self, request):
         transaction_type = request.query_params.get('transaction_type', None)
         if transaction_type:
-            transactions = self.queryset.filter(transaction_type=transaction_type)
+            transactions = self.queryset.filter(transaction_type=transaction_type)    
         else:
-            transactions = self.queryset
-        
-        serializer = self.get_serializer(transactions, many=True)
+            transaction = self.queryset
+        serializer = self.get_serializer(transaction, many=True)
         return Response(serializer.data)
+    
 
 
 class BudgetView(viewsets.ModelViewSet):
@@ -73,6 +73,18 @@ class BudgetView(viewsets.ModelViewSet):
         serializer = TransactionSerializer(transacations, many=True)
         return Response(serializer.data)
 
+
+
+class RecurringTransactionView(viewsets.ModelViewSet):
+    serializer_class = Recurring_TransactionSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+    queryset = RecurringTransaction.objects.all()
+
+    def get_queryset(self):
+        return RecurringTransaction.objects.filter(user=self.request.user)
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
