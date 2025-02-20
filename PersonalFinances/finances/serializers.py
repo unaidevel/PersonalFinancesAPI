@@ -43,11 +43,11 @@ class TransactionSerializer(serializers.ModelSerializer):
 
     
     recurring_transaction = serializers.PrimaryKeyRelatedField(queryset=RecurringTransaction.objects.none(), required=False)
-    external_category = CategorySerializer(many=True, read_only=True)
+    # external_category = CategorySerializer(many=True, read_only=True)
 
     class Meta:
         model = Transaction
-        fields = ['id', 'user', 'category', 'transaction_type','budget', 'amount', 'date_created', 'external_category']
+        fields = ['id', 'user', 'category', 'transaction_type','budget', 'amount', 'date_created']
         read_only_fields = ['id']
     
 

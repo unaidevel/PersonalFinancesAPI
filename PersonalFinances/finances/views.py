@@ -48,10 +48,10 @@ class TransactionViewSet(viewsets.ModelViewSet):
     def filter_by_type(self, request):
         transaction_type = request.query_params.get('transaction_type', None)
         if transaction_type:
-            transactions = self.queryset.filter(transaction_type=transaction_type)    
+            transactions = self.get_queryset().filter(transaction_type=transaction_type)    
         else:
-            transaction = self.queryset
-        serializer = self.get_serializer(transaction, many=True)
+            transaction = self.get_queryset()
+        serializer = self.get_serializer(transactions, many=True)
         return Response(serializer.data)
     
 

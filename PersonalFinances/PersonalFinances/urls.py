@@ -19,26 +19,28 @@ from django.urls import path, include
 from dj_rest_auth import urls as rest_auth_urls
 from finances.views import FacebookLogin, GitHubLogin, GoogleLogin
 from rest_framework import permissions
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 
 import os
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'PersonalFinances.settings')
 
 
-schema_view = get_schema_view(
-    openapi.Info(
-        title='My Personal Finances API',
-        default_version='v1',
-        description='Personal finances API that helps the user in numerous things.',
-        terms_of_service='https://www.google.com/policies/terms/',
-        contact=openapi.Contact(email='unai.devel@gmail.com'),
-        license=openapi.License(name='BSD License'),
-    ),
-    public=True,
-    permission_classes=(permissions.AllowAny,),
-)
+
+# from drf_yasg.views import get_schema_view
+# from drf_yasg import openapi
+# schema_view = get_schema_view(
+#     openapi.Info(
+#         title='My Personal Finances API',
+#         default_version='v1',
+#         description='Personal finances API that helps the user in numerous things.',
+#         terms_of_service='https://www.google.com/policies/terms/',
+#         contact=openapi.Contact(email='unai.devel@gmail.com'),
+#         license=openapi.License(name='BSD License'),
+#     ),
+#     public=True,
+#     permission_classes=(permissions.AllowAny,),
+# )
 
 
 
@@ -52,5 +54,7 @@ urlpatterns = [
     path('dj-rest-auth/facebook', FacebookLogin.as_view(), name='fb_login'),
     path('dj-rest-auth/github/', GitHubLogin.as_view(), name='github_login'),
     path('dj-rest-auth/google/', GoogleLogin.as_view(), name='google_login'),
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui')
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    # path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]
