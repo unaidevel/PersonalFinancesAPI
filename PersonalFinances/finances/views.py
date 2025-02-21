@@ -13,6 +13,10 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 from finances.filters import TransactionFilter
+from rest_framework.filters import OrderingFilter, SearchFilter
+
+
+
 #ViewSet
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
@@ -28,8 +32,11 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class TransactionViewSet(viewsets.ModelViewSet):
     serializer_class = TransactionSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = TransactionFilter
+    filterset_fields = ['amount']
+    search_fields = ['amount','category__name']
+    ordering_fields = ['amount', 'date_created']
 
     def get_queryset(self):
         return Transaction.objects.filter(user=self.request.user)
