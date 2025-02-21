@@ -1,6 +1,7 @@
 # Ignore the virtual environment
 env/
 venv/
+commands.md
 
 # Ignore compiled Python files
 __pycache__/

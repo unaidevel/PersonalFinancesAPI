@@ -32,24 +32,20 @@ class BudgetSerializer(serializers.ModelSerializer):
 
 class TransactionSerializer(serializers.ModelSerializer):
 
-    def __init__(self, *args, **kwargs):
-        request = self.context.get('request', None)
-        super().__init__(*args, **kwargs)
-
-        if request and request.user.is_authenticated:
-            self.fields['recurring_transaction'].queryset = RecurringTransaction.objects.filter(user=request.user)
-
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-
-    
     recurring_transaction = serializers.PrimaryKeyRelatedField(queryset=RecurringTransaction.objects.none(), required=False)
-    # external_category = CategorySerializer(many=True, read_only=True)
-
+    external_category = CategorySerializer(many=True, read_only=True)
+    
     class Meta:
         model = Transaction
-        fields = ['id', 'user', 'category', 'transaction_type','budget', 'amount', 'date_created']
+        fields = ['id', 'user', 'category', 'transaction_type','budget', 'amount', 'date_created', 'external_category', 'recurring_transaction']
         read_only_fields = ['id']
     
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        request = self.context.get('request', None)
+        if request and request.user.is_authenticated:
+            self.fields['recurring_transaction'].queryset = RecurringTransaction.objects.filter(user=request.user)
 
     def create(self, validated_data):
         validated_data['user'] = self.context['request'].user

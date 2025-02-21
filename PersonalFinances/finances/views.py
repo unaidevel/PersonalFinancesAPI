@@ -11,8 +11,8 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from finances.permissions import IsOwnerOrReadOnly
 from rest_framework.response import Response
 from rest_framework.decorators import action
-
-
+from django_filters.rest_framework import DjangoFilterBackend
+from finances.filters import TransactionFilter
 #ViewSet
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
@@ -28,6 +28,8 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class TransactionViewSet(viewsets.ModelViewSet):
     serializer_class = TransactionSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = TransactionFilter
 
     def get_queryset(self):
         return Transaction.objects.filter(user=self.request.user)
@@ -48,10 +50,10 @@ class TransactionViewSet(viewsets.ModelViewSet):
     def filter_by_type(self, request):
         transaction_type = request.query_params.get('transaction_type', None)
         if transaction_type:
-            transactions = self.get_queryset().filter(transaction_type=transaction_type)    
+            transaction = self.queryset.filter(transaction_type=transaction_type)    
         else:
-            transaction = self.get_queryset()
-        serializer = self.get_serializer(transactions, many=True)
+            transaction = self.queryset
+        serializer = self.get_serializer(transaction, many=True)
         return Response(serializer.data)
     
 

@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     # 'drf_yasg',
     'drf_spectacular',
+    'django_filters',
 ]
 
 SITE_ID = 1
@@ -194,7 +195,8 @@ CELERY_BEAT_SCHEDULE = {
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Personal Finances API',
-    'DESCRIPTION': 'Your project description',
+    'DESCRIPTION': 'A simple RESTful API for managing income, expenses, budgets, and savings. Track transactions,' 
+    ' set financial goals, and get insights into your spending. Secure authentication and automated recurring transactions included.',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }
