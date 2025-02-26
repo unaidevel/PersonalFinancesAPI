@@ -38,7 +38,7 @@ class TransactionSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Transaction
-        fields = ['id', 'user', 'category', 'transaction_type','budget', 'amount', 'date_created', 'external_category', 'recurring_transaction']
+        fields = ['id', 'user', 'category', 'transaction_type','budget', 'amount', 'date_created', 'goal', 'external_category', 'recurring_transaction']
         read_only_fields = ['id']
     
     def __init__(self, *args, **kwargs):
