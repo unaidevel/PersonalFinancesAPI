@@ -18,7 +18,7 @@ class Transaction(models.Model):
     transaction_type = models.CharField(choices=TRANSACTION_TYPES, default=None, max_length=15)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     date_created = models.DateTimeField(auto_now_add=True)
-    goal = models.ForeignKey('Goals', on_delete=models.C)
+    goal = models.ForeignKey('Goals', on_delete=models.CASCADE, null=True, blank=True, related_name='transactions')
 
     def __str__(self):
         return f'Transaction of {self.amount} done.'

@@ -7,6 +7,8 @@ router.register(r'transaction', views.TransactionViewSet, basename='transaction_
 router.register(r'category', views.CategoryViewSet, basename='category')
 router.register(r'budget', views.BudgetView, basename='budget')
 router.register(r'recurring_transactions', views.RecurringTransactionView, basename='recurring_transactions')
+router.register(r'goals', views.GoalsView, basename='goals')
+
 
 urlpatterns = [
     path('', include(router.urls))

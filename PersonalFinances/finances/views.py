@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from finances.models import Category, Transaction, Budget, RecurringTransaction
-from finances.serializers import CategorySerializer, TransactionSerializer, BudgetSerializer, Recurring_TransactionSerializer
+from finances.models import Category, Transaction, Budget, RecurringTransaction, Goals
+from finances.serializers import CategorySerializer, TransactionSerializer, BudgetSerializer, Recurring_TransactionSerializer, GoalsSerializer
 from rest_framework import permissions
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from allauth.socialaccount.providers.github.views import GitHubOAuth2Adapter
@@ -57,10 +57,10 @@ class TransactionViewSet(viewsets.ModelViewSet):
     def filter_by_type(self, request):
         transaction_type = request.query_params.get('transaction_type', None)
         if transaction_type:
-            transaction = self.queryset.filter(transaction_type=transaction_type)    
+            transactions = self.get_queryset().filter(transaction_type=transaction_type)
         else:
-            transaction = self.queryset
-        serializer = self.get_serializer(transaction, many=True)
+            transactions = self.get_queryset()
+        serializer = self.get_serializer(transactions, many=True)
         return Response(serializer.data)
     
 
@@ -94,6 +94,19 @@ class RecurringTransactionView(viewsets.ModelViewSet):
     
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+
+class GoalsView(viewsets.ModelViewSet):
+    serializer_class = GoalsSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+    queryset = Goals.objects.all()
+
+    def get_queryset(self):
+        return Goals.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer): 
+        serializer.save(user=self.request.user)
+
 
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter

@@ -27,12 +27,12 @@ class Goals(models.Model):
     description = models.TextField()
     target_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     current_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    deadline = models.DateTimeField()
+    deadline = models.DateTimeField(null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     last_time_edited = models.DateTimeField(auto_now=True)
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    status = models.CharField(choices=STATUS_CHOICES, default=IN_PROGRESS)
+    status = models.CharField(choices=STATUS_CHOICES, default=IN_PROGRESS, max_length=12)
 
     def process_percentage(self):
         return (self.current_amount / self.target_amount) * 100 if self.target_amount > 0 else 0
@@ -68,4 +68,3 @@ def update_goal_amount(sender, instance, **kwargs):
         instance.goal.current_amount += instance.amount
         instance.goal.update_status()
         instance.goal.save()
-
