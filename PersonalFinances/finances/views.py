@@ -1,7 +1,11 @@
 from django.shortcuts import render
 from rest_framework import viewsets
 from finances.models import Category, Transaction, Budget, RecurringTransaction, Goals
-from finances.serializers import CategorySerializer, TransactionSerializer, BudgetSerializer, Recurring_TransactionSerializer, GoalsSerializer
+from finances.serializers.category import CategorySerializer
+from finances.serializers.transaction import TransactionSerializer
+from finances.serializers.recurring_transactions import Recurring_TransactionSerializer
+from finances.serializers.budget import BudgetSerializer
+from finances.serializers.goals import GoalsSerializer
 from rest_framework import permissions
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from allauth.socialaccount.providers.github.views import GitHubOAuth2Adapter
