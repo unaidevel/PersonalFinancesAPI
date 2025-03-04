@@ -26,13 +26,16 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [permissions.IsAuthenticated]
-    
+
+
     def get_queryset(self):
         transaction_type = self.request.query_params.get('transaction_type', None)
-        if transaction_type:
-            return self.queryset.filter(category_type=transaction_type)
-        return self.queryset
 
+        queryset = Category.objects.filter(user=self.request.user)
+        if transaction_type:
+            queryset = queryset.filter(category_type=transaction_type)
+
+        return queryset
 class TransactionViewSet(viewsets.ModelViewSet):
     serializer_class = TransactionSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]

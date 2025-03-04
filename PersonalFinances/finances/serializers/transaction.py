@@ -6,13 +6,13 @@ from finances.serializers.category import CategorySerializer
 from rest_framework import exceptions
 from finances.models.goals import Goals
 from finances.models.category import Category
-
+from finances.models.budget import Budget
 
 class TransactionSerializer(serializers.ModelSerializer):
 
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     external_category = CategorySerializer(many=True, read_only=True)
-    goal = serializers.PrimaryKeyRelatedField(queryset=Goals.objects.none())
+    goal = serializers.PrimaryKeyRelatedField(queryset=Goals.objects.none())   #None(): Returning an empty list so we can add the elements we desire.
     category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.none())
     class Meta:
         model = Transaction
@@ -20,12 +20,13 @@ class TransactionSerializer(serializers.ModelSerializer):
         'external_category']
         read_only_fields = ['id']
         
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):     #Needed to get user queryset instead of returning everything. 
         super().__init__(*args, **kwargs)
         request = self.context.get('request')
         if request and request.user:
             self.fields['goal'].queryset = Goals.objects.filter(user=request.user)
             self.fields['category'].queryset = Category.objects.filter(user=request.user)
+            self.fields['budget'].queryset = Budget.objects.filter(user=request.user)
 
     def create(self, validated_data):
         validated_data['user'] = self.context['request'].user
