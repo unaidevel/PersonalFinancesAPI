@@ -4,6 +4,7 @@ from finances.models import Category, Transaction, Budget, RecurringTransaction,
 from finances.serializers.category import CategorySerializer
 from finances.serializers.transaction import TransactionSerializer
 from finances.serializers.recurring_transactions import Recurring_TransactionSerializer
+# from finances.serializers.spending_insight import SpendingInsightSerializer
 from finances.serializers.budget import BudgetSerializer
 from finances.serializers.goals import GoalsSerializer
 from rest_framework import permissions
@@ -18,8 +19,8 @@ from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 from finances.filters import TransactionFilter
 from rest_framework.filters import OrderingFilter, SearchFilter
-
-
+from rest_framework.generics import ListAPIView
+from django.db.models import Sum
 
 #ViewSet
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -113,6 +114,37 @@ class GoalsView(viewsets.ModelViewSet):
 
     def perform_create(self, serializer): 
         serializer.save(user=self.request.user)
+
+
+
+class SpendingListView(ListAPIView):
+    serializer_class = TransactionSerializer
+    permission_classes = [IsOwnerOrReadOnly, permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Transaction.objects.filter(user=user).order_by('-date_created')
+
+# class InsightList(ListAPIView):
+
+#     serializer_class = SpendingInsightSerializer
+#     permission_classes = [IsOwnerOrReadOnly, permissions.IsAuthenticated]
+
+#     def get_queryset(self):
+#         user = self.request.user
+#         return Transaction.objects.filter(user=user).order_by('-date_created')
+    
+
+class InsightView(ListAPIView):
+    permission_classes = [IsOwnerOrReadOnly, permissions.IsAuthenticated]
+
+    def list(self, request, *args, **kwargs):
+        user = request.user
+        spending_per_category = (
+            Transaction.objects.filter(user=user).values('category__name').annotate(total_spent=Sum('amount'))
+        )
+        return Response(spending_per_category)
+
 
 
 class FacebookLogin(SocialLoginView):

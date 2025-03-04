@@ -1,6 +1,6 @@
 from rest_framework.routers import DefaultRouter
 from finances import views
-from django.urls import path, include
+from django.urls import path, include 
 
 router = DefaultRouter()
 router.register(r'transaction', views.TransactionViewSet, basename='transaction_list')
@@ -10,6 +10,14 @@ router.register(r'recurring_transactions', views.RecurringTransactionView, basen
 router.register(r'goals', views.GoalsView, basename='goals')
 
 
+# urlpatterns = [
+#     path('', include(router.urls)),
+#     path('spendings', SpendingList.as_view(), name='spending_list')
+# ]
+
 urlpatterns = [
-    path('', include(router.urls))
+    path('transaction-list', views.SpendingListView.as_view(), name='spending_list'),
+    path('', include(router.urls)),
+    path('insight-list', views.InsightView.as_view(), name='insight_list')
+
 ]
