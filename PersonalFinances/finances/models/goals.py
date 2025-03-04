@@ -38,7 +38,7 @@ class Goals(models.Model):
         return (self.current_amount / self.target_amount) * 100 if self.target_amount > 0 else 0
     
     def __str__(self):
-        return f'Goal:{self.name}. Current amount: {self.current_amount}'
+        return f'Goal: {self.name}. Current amount: {self.current_amount}'
 
     def save(self, *args, **kwargs):
         if not self.id:

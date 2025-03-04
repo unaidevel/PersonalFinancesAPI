@@ -12,7 +12,7 @@ class TransactionSerializer(serializers.ModelSerializer):
 
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     external_category = CategorySerializer(many=True, read_only=True)
-    goal = serializers.PrimaryKeyRelatedField(queryset=Goals.objects.none())   #None(): Returning an empty list so we can add the elements we desire.
+    goal = serializers.PrimaryKeyRelatedField(queryset=Goals.objects.none(), required=False, allow_null=True)   #None(): Returning an empty list so we can add the elements we desire.
     category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.none())
     class Meta:
         model = Transaction
@@ -20,7 +20,7 @@ class TransactionSerializer(serializers.ModelSerializer):
         'external_category']
         read_only_fields = ['id']
         
-    def __init__(self, *args, **kwargs):     #Needed to get user queryset instead of returning everything. 
+    def __init__(self, *args, **kwargs):     #Required to get user queryset instead of returning everything. 
         super().__init__(*args, **kwargs)
         request = self.context.get('request')
         if request and request.user:
