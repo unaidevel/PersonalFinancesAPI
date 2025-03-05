@@ -18,6 +18,7 @@ router.register(r'goals', views.GoalsView, basename='goals')
 urlpatterns = [
     path('transaction-list', views.SpendingListView.as_view(), name='spending_list'),
     path('', include(router.urls)),
-    path('insight-list', views.InsightView.as_view(), name='insight_list')
-
+    path('insight-list', views.InsightView.as_view(), name='insight_list'),
+    path('exercise-list', views.AdvancedInsights.as_view(), name='exercise'),
+    path('insights-view', views.InsightsView.as_view(), name='InsightsView'),
 ]

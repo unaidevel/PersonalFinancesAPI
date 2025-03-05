@@ -19,8 +19,11 @@ from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 from finances.filters import TransactionFilter
 from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 from django.db.models import Sum
+from django.db.models.functions import TruncMonth
+from finances.serializers.advanced_insights import AdvancedInsightsSerializer
 
 #ViewSet
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -135,6 +138,7 @@ class SpendingListView(ListAPIView):
 #         return Transaction.objects.filter(user=user).order_by('-date_created')
     
 
+#Total spent by category
 class InsightView(ListAPIView):
     permission_classes = [IsOwnerOrReadOnly, permissions.IsAuthenticated]
 
@@ -144,6 +148,67 @@ class InsightView(ListAPIView):
             Transaction.objects.filter(user=user).values('category__name').annotate(total_spent=Sum('amount'))
         )
         return Response(spending_per_category)
+    
+
+
+
+class MonthlySpendingView(ListAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+
+    def list(self, request, *args, **kwargs):
+        pass
+
+
+
+# class ExerciseView(ListAPIView):
+#     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+
+#     def list(self, request, *args, **kwargs):
+#         # total spent by a specific user
+#         user = request.user
+#         total_spent = Transaction.objects.filter(user=user).aggregate(Sum('amount'))
+#         return Response(total_spent)
+
+
+# class ExerciseView(ListAPIView):
+#     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+
+#     def list(self, request, *args, **kwargs):
+#         total_spent_category = Transaction.objects.filter(user=request.user).values('category__name').annotate(total_spent=Sum('amount'))
+#         return Response(total_spent_category)
+
+
+
+
+
+
+class InsightsView(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+
+    def get(self, request, *args, **kwargs):
+        total_spent_category = Transaction.objects.filter(user=request.user).values('category__name').annotate(total_spent=Sum('amount'))
+        data = [
+            {
+            'category': item['category__name'],
+            'total_spent': item['total_spent']
+        }
+        for item in total_spent_category
+        ]
+        return Response(data)
+
+class AdvancedInsights(ListAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+    
+
+    def list(self, request, *args, **kwargs):
+        total_spent_per_month = Transaction.objects.filter(user=request.user).values(month=TruncMonth('date_created')).annotate(total_spent=Sum('amount'))
+        total_sum = Transaction.objects.filter(user=request.user).aggregate(Sum('amount'))
+        data = {
+            'total_spent_per_month': total_spent_per_month,
+            'total_sum': total_sum   
+        }
+        serializer = AdvancedInsightsSerializer(data)
+        return Response(serializer.data)
 
 
 
