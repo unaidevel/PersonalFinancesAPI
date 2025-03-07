@@ -1,14 +1,13 @@
 from rest_framework import serializers
-from finances.models.transaction import Transaction
-from finances.models.recurring_transaction import RecurringTransaction
-from finances.models.goals import Goals
-from finances.serializers.category import CategorySerializer
+from finances.serializers import CategorySerializer
+from finances.serializers.split import SplitSerializer
 from rest_framework import exceptions
-from finances.models.goals import Goals
-from finances.models.category import Category
-from finances.models.budget import Budget
+from finances.models import Goals, Category, Budget, Transaction, RecurringTransaction, SplitTransaction
+
 
 class TransactionSerializer(serializers.ModelSerializer):
+
+    splits = SplitSerializer(many=True, required=False)
 
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     external_category = CategorySerializer(many=True, read_only=True)
@@ -16,7 +15,7 @@ class TransactionSerializer(serializers.ModelSerializer):
     category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.none())
     class Meta:
         model = Transaction
-        fields = ['id', 'user', 'category', 'transaction_type', 'goal', 'budget', 'amount', 'date_created',
+        fields = ['id', 'user', 'category', 'transaction_type', 'splits', 'goal', 'budget', 'amount', 'date_created',
         'external_category']
         read_only_fields = ['id']
         
@@ -28,9 +27,35 @@ class TransactionSerializer(serializers.ModelSerializer):
             self.fields['category'].queryset = Category.objects.filter(user=request.user)
             self.fields['budget'].queryset = Budget.objects.filter(user=request.user)
 
+    # def create(self, validated_data):
+    #     validated_data['user'] = self.context['request'].user
+    #     return super().create(validated_data)
+    
+
     def create(self, validated_data):
-        validated_data['user'] = self.context['request'].user
-        return super().create(validated_data)
+        splits_data = validated_data.pop('splits', None)
+        transaction = Transaction.objects.create(**validated_data)
+
+        if splits_data:
+            transaction.is_split = True
+            transaction.save()
+            for split in splits_data:
+                SplitTransaction.objects.create(parent_transaction=transaction, **split)
+        return transaction
+    
+
+        
+    def create(self, validated_data):
+        splits_data = validated_data.pop('splits', None)
+        transaction = Transaction.objects.create(**validated_data)
+
+        if splits_data:
+            transaction.is_split = True
+            transaction.save()
+            for split in splits_data:
+                SplitTransaction.objects.create(parent_transaction=transaction, **split)
+        
+        return transaction
         
     # def validate_goal(self, value):
     #     if self.context['request'].user != value:

@@ -70,7 +70,9 @@ class InsightsView(APIView):
         for item in total_spent_category
         for tem in average_spent_category
         ]
-        return Response(data)
+        serializer = AdvancedInsightsSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data)
 
 class AdvancedInsights(ListAPIView):
     

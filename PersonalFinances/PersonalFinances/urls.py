@@ -20,7 +20,7 @@ from dj_rest_auth import urls as rest_auth_urls
 from finances.views import FacebookLogin, GitHubLogin, GoogleLogin
 from rest_framework import permissions
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 import os
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'PersonalFinances.settings')
@@ -47,6 +47,8 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'PersonalFinances.settings')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('', include('finances.urls')), 
     path('api-auth/', include('rest_framework.urls')),
     path('rest-auth/', include(rest_auth_urls)),
