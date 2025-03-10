@@ -21,7 +21,7 @@ class RecurringTransaction(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    category = models.CharField(max_length=255)
+    category = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='Recurring_transaction')
     description = models.CharField(max_length=100)
     budget = models.ForeignKey('Budget', on_delete=models.CASCADE, related_name='Recurring_transaction', null=True, blank=True)
     transaction_type = models.CharField(choices=TRANSACTION_TYPES, max_length=15)  # Corrected this line

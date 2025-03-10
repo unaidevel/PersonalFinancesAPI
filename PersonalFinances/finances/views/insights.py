@@ -8,8 +8,11 @@ from finances.serializers import AdvancedInsightsSerializer, TransactionSerializ
 from django.db.models import Sum, Avg, Count
 from django.db.models.functions import TruncMonth, TruncYear
 from datetime import datetime, timedelta
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
 
 class SpendingListView(ListAPIView):
+    authentication_classes = [JWTAuthentication]
     serializer_class = TransactionSerializer
     permission_classes = [IsOwnerOrReadOnly, permissions.IsAuthenticated]
 
@@ -28,10 +31,12 @@ class SpendingListView(ListAPIView):
 
 
 class MonthlySpendingView(ListAPIView):
+    authentication_classes = [JWTAuthentication]
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
     def list(self, request, *args, **kwargs):
         pass
+
 
 
 
@@ -56,6 +61,7 @@ class MonthlySpendingView(ListAPIView):
 
 class InsightsView(APIView):
 
+    authentication_classes = [JWTAuthentication]
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
     def get(self, request, *args, **kwargs):
@@ -73,9 +79,13 @@ class InsightsView(APIView):
         serializer = AdvancedInsightsSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data)
+    
+
 
 class AdvancedInsights(ListAPIView):
-    
+
+
+    authentication_classes = [JWTAuthentication]
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
     def list(self, request, *args, **kwargs):
@@ -103,6 +113,7 @@ class AdvancedInsights(ListAPIView):
 
 
 """
+
 Summary of New Insights You Could Add:
 
     ---Average Spending per Category
@@ -116,4 +127,5 @@ Summary of New Insights You Could Add:
     Top Spenders (if multi-user)
     Custom Date Range Spending
     Spend vs. Income
+    
 """

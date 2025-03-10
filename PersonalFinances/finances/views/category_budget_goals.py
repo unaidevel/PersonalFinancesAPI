@@ -4,14 +4,16 @@ from finances.serializers import CategorySerializer, BudgetSerializer, GoalsSeri
 from finances.permissions import IsOwnerOrReadOnly
 from rest_framework.decorators import action
 from rest_framework import permissions
-
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Category.objects.all()
+
+    # authentication_classes = [JWTAuthentication]
+    # queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
 
     def get_queryset(self):
@@ -23,10 +25,15 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
         return queryset
     
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    
 
 
 class BudgetView(viewsets.ModelViewSet):
 
+    # authentication_classes = [JWTAuthentication]
     serializer_class = BudgetSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Budget.objects.all()
@@ -43,7 +50,13 @@ class BudgetView(viewsets.ModelViewSet):
         return Response(serializer.data)
     
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+    
+
 class GoalsView(viewsets.ModelViewSet):
+
+    # authentication_classes = [JWTAuthentication]
     serializer_class = GoalsSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Goals.objects.all()
@@ -53,3 +66,4 @@ class GoalsView(viewsets.ModelViewSet):
 
     def perform_create(self, serializer): 
         serializer.save(user=self.request.user)
+

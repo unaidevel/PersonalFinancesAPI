@@ -141,11 +141,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'rest_framework.authentication.SessionAuthentication',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
         # 'rest_framework.authentication.TokenAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication'
-    ),
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
     'DEFAULT_PERMISSIONS_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
@@ -208,4 +208,28 @@ SPECTACULAR_SETTINGS = {
     ' set financial goals, and get insights into your spending. Secure authentication and automated recurring transactions included.',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
+}
+
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=45),
+
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+
+    'ALGORITHM': 'HS256',
+
+    'SIGNING_KEY': 'your-secret-key',
+
+    'VERIFYING_KEY': None, #Default is h256
+
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+
+    'BLACKLIST_AFTER_ROTATION': True,
+
+    'ROTATE_REFRESH_TOKEN': True,
+
+    'UPDATE_LAST_LOGIN': True,
 }
