@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
-
 TRANSACTION_TYPES = [
     ('income', 'Income'),
     ('expense', 'Expense'),
@@ -19,7 +18,8 @@ class Transaction(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     date_created = models.DateTimeField(auto_now_add=True)
     goal = models.ForeignKey('Goals', on_delete=models.CASCADE, null=True, blank=True, related_name='transactions')
-    split = models.BooleanField(default=True)
+    split = models.BooleanField(default=False)
+
 
     def __str__(self):
         return f'Transaction of {self.amount} done.'
@@ -31,8 +31,13 @@ class Transaction(models.Model):
 def update_budget_remaining(sender, instance, **kwargs):
     if instance.budget:
         instance.budget.update_remaining_budget()
+    if hasattr(instance.user, 'account'):
+        instance.user.account.update_balance()
+    
 
-
+# @receiver (post_save, sender=Transaction)
+# def update_acount_balance(sender, instance, **kwargs):
+#     instance.user.account.update_balance()
 
 
 

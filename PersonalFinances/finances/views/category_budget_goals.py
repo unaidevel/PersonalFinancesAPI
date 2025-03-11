@@ -5,9 +5,7 @@ from finances.permissions import IsOwnerOrReadOnly
 from rest_framework.decorators import action
 from rest_framework import permissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
-
-
-
+from rest_framework.response import Response
 class CategoryViewSet(viewsets.ModelViewSet):
 
     # authentication_classes = [JWTAuthentication]
@@ -66,4 +64,8 @@ class GoalsView(viewsets.ModelViewSet):
 
     def perform_create(self, serializer): 
         serializer.save(user=self.request.user)
+
+
+
+
 

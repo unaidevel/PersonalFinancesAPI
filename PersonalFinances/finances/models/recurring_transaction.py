@@ -3,7 +3,7 @@ import uuid
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.utils import timezone
-
+from finances.models import Transaction
 
 TRANSACTION_TYPES = [
     ('income', 'Income'),
@@ -46,6 +46,13 @@ class RecurringTransaction(models.Model):
             return self.start_date + timezone.timedelta(weeks=4, days=2)
         return self.start_date
 
+    def generate_transaction_from_recurring(Recurring_Transaction):
+        transaction = Transaction.objects.create(
+            user=Recurring_Transaction.user,
+            amount=Recurring_Transaction.amount,
+            transaction_type=Recurring_Transaction.transaction_type,
+            date=timezone.now())
 
+        transaction.user.account.update_balance()
 
 
