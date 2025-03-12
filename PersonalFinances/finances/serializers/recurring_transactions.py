@@ -20,3 +20,6 @@ class Recurring_TransactionSerializer(serializers.ModelSerializer):
             self.fields['goals'].queryset = Goals.objects.filter(user=request.user)
             self.fields['category'].queryset = Category.objects.filter(user=request.user)
             self.fields['budget'].queryset = Budget.objects.filter(user=request.user)
+
+
+        

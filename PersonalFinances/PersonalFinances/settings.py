@@ -238,3 +238,12 @@ SIMPLE_JWT = {
 
     'UPDATE_LAST_LOGIN': True,
 }
+
+
+EMAIL_BACKEND = 'anymail.backends.sendgrid.EmailBackend'
+SENDGRIP_API_KEY = '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'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'unai.devel@gmail.com'
+EMAIL_HOST_PASSWORD = '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'

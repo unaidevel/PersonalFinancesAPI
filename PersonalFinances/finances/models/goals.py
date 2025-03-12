@@ -62,9 +62,3 @@ class Goals(models.Model):
             self.status = self.IN_PROGRESS
 
 
-@receiver(post_save, sender=Transaction)
-def update_goal_amount(sender, instance, **kwargs):
-    if instance.goal:
-        instance.goal.current_amount += instance.amount
-        instance.goal.update_status()
-        instance.goal.save()
