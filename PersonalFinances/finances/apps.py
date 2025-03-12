@@ -6,4 +6,4 @@ class FinancesConfig(AppConfig):
     name = 'finances'
 
     def ready(self):
-        import finances.signals
+        from finances import signals

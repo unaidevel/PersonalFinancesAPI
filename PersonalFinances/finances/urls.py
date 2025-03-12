@@ -20,5 +20,5 @@ urlpatterns = [
     path('transaction-list/', views.SpendingListView.as_view(), name='spending_list'), #List filtered by date created
     path('advanced-insights/', views.AdvancedInsights.as_view(), name='advanced_insights'),#Total spent per month and total sum
     path('insights-view/', views.InsightsView.as_view(), name='Insights_View'),
-    path('accounts/balance/', views.AccountView.as_view(), name='balance_view'),  
+    path('account/', views.AccountView.as_view(), name='account_balance'),
 ]

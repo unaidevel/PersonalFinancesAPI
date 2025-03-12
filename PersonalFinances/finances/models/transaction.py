@@ -26,17 +26,10 @@ class Transaction(models.Model):
     
 
 
-@receiver(post_save, sender=Transaction)
-@receiver(post_delete, sender=Transaction)
-def update_budget_remaining(sender, instance, **kwargs):
-    if instance.budget:
-        instance.budget.update_remaining_budget()
-    if hasattr(instance.user, 'account'):
-        instance.user.account.update_balance()
     
 
 # @receiver (post_save, sender=Transaction)
-# def update_acount_balance(sender, instance, **kwargs):
+# def update_account_balance(sender, instance, **kwargs):
 #     instance.user.account.update_balance()
 
 
