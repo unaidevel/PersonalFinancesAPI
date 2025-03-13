@@ -4,6 +4,7 @@ from django.utils import timezone
 
 
 
+
 class BudgetSerializer(serializers.ModelSerializer):
 
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())

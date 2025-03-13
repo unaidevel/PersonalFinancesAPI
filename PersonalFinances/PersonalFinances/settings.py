@@ -51,14 +51,12 @@ INSTALLED_APPS = [
     # 'drf_yasg',
     'drf_spectacular',
     'django_filters',
+    'anymail',
     'rest_framework_simplejwt',
 ]
 
 SITE_ID = 1
 
-ACCOUNT_EMAIL_VERIFICATION = 'none'
-ACCOUNT_AUTHENTICATION_METHOD = 'username'
-ACCOUNT_EMAIL_REQUIRED = False
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -240,10 +238,33 @@ SIMPLE_JWT = {
 }
 
 
-EMAIL_BACKEND = 'anymail.backends.sendgrid.EmailBackend'
-SENDGRIP_API_KEY = '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'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'unai.devel@gmail.com'
-EMAIL_HOST_PASSWORD = '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'
+# EMAIL_BACKEND = 'anymail.backends.sendgrid.EmailBackend'
+# SENDGRIP_API_KEY = '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'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'unai.devel@gmail.com'
+# EMAIL_HOST_PASSWORD = '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'
+
+# ACCOUNT_EMAIL_VERIFICATION = 'none'
+# ACCOUNT_LOGIN_METHODS = {'username'}
+# ACCOUNT_EMAIL_REQUIRED = False
+
+
+import os 
+import environ
+
+env = environ.Env()
+environ.Env.read_env(env_file='sendgrid.env')
+SENDGRID_API_KEY = env("SENDGRID_API_KEY")
+
+ANYMAIL = {
+    "SENDGRID_API_KEY": SENDGRID_API_KEY,
+}
+
+print("SENDGRID_API_KEY:", SENDGRID_API_KEY)
+
+EMAIL_BACKEND = "anymail.backends.sendgridEmailBackend"
+DEFAULT_FROM_EMAIL = "unai.devel@gmail.com"
+
+
