@@ -21,4 +21,7 @@ urlpatterns = [
     path('advanced-insights/', views.AdvancedInsights.as_view(), name='advanced_insights'),#Total spent per month and total sum
     path('insights-view/', views.InsightsView.as_view(), name='Insights_View'),
     path('account/', views.AccountView.as_view(), name='account_balance'),
+    path('export/csv', views.ExportTransactionCsv.as_view(), name='export_as_csv'),
+    path('export/excel', views.ExportTransactionExcel.as_view(), name='export_as_excel'),
+    path('export/pdf', views.ExportTransactionPdf.as_view(), name='export_as_pdf'),
 ]
