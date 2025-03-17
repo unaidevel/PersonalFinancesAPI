@@ -12,7 +12,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 class SpendingListView(ListAPIView):
-    authentication_classes = [JWTAuthentication]
+    # authentication_classes = [JWTAuthentication]
     serializer_class = TransactionSerializer
     permission_classes = [IsOwnerOrReadOnly, permissions.IsAuthenticated]
 
@@ -31,7 +31,7 @@ class SpendingListView(ListAPIView):
 
 
 class MonthlySpendingView(ListAPIView):
-    authentication_classes = [JWTAuthentication]
+    # authentication_classes = [JWTAuthentication]
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
     def list(self, request, *args, **kwargs):
@@ -61,7 +61,7 @@ class MonthlySpendingView(ListAPIView):
 
 class InsightsView(APIView):
 
-    authentication_classes = [JWTAuthentication]
+    # authentication_classes = [JWTAuthentication]
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
     def get(self, request, *args, **kwargs):
@@ -85,7 +85,7 @@ class InsightsView(APIView):
 class AdvancedInsights(ListAPIView):
 
 
-    authentication_classes = [JWTAuthentication]
+    # authentication_classes = [JWTAuthentication]
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
     def list(self, request, *args, **kwargs):

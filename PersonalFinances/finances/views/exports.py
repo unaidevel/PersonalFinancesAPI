@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework import permissions
-from finances.models import Transaction
+from finances.models import Transaction, Account
 from finances.permissions import IsOwnerOrReadOnly
 import pandas as pd
 from reportlab.lib.pagesizes import letter
@@ -13,7 +13,7 @@ import textwrap
 
 
 
-"""Using"""
+"""Using Django CSV built int method"""
 # class Export_transaction_csv(APIView):
 #     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     
@@ -31,6 +31,8 @@ import textwrap
 #             writer.writerow([transaction.date_created, transaction.amount, transaction.category])
         
 #         return response
+
+
 
 
 
@@ -74,12 +76,20 @@ class ExportTransactionPdf(APIView):
 
         transactions = Transaction.objects.filter(user=request.user).values('date_created', 'amount', 
                                                                             'category')
+        account_balance = Account.objects.filter(user=request.user).first() #Objective: Return one value or none
+        # I created the same with values to balance and it returns a dict, error
+                                                                            
         df = pd.DataFrame(list(transactions))
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="transactions.pdf"'
 
-        c = canvas.Canvas(response, pagesize=letter)
+        c = canvas.Canvas(response, pagesize=letter) #creates the pdf
         y_position = 750
+
+        if account_balance:
+            balance = account_balance.balance
+            c.drawString(100, y_position, f'Account Balance: {balance:.2f}')  #:.2f for rounding the number to 2 decimal places, i think its already limited
+            y_position -= 40
         c.drawString(100, y_position, 'Transaction List') #title
         y_position -= 20
 
