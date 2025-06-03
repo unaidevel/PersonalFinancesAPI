@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', 'clavedfasfadsfsdf')
+SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = os.environ.get('DEBUG', '') != 'False'
 
 
@@ -242,33 +242,22 @@ SIMPLE_JWT = {
 }
 
 
-# EMAIL_BACKEND = 'anymail.backends.sendgrid.EmailBackend'
-# SENDGRIP_API_KEY = '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'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'unai.devel@gmail.com'
-# EMAIL_HOST_PASSWORD = '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'
 
-# ACCOUNT_EMAIL_VERIFICATION = 'none'
-# ACCOUNT_LOGIN_METHODS = {'username'}
-# ACCOUNT_EMAIL_REQUIRED = False
+
 
 
 import os 
-import environ
 
-env = environ.Env()
-environ.Env.read_env(env_file='sendgrid.env')
-SENDGRID_API_KEY = env("SENDGRID_API_KEY")
+
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
 
 ANYMAIL = {
     "SENDGRID_API_KEY": SENDGRID_API_KEY,
 }
-
-print("SENDGRID_API_KEY:", SENDGRID_API_KEY)
-
-EMAIL_BACKEND = "anymail.backends.sendgridEmailBackend"
-DEFAULT_FROM_EMAIL = "unai.devel@gmail.com"
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 
 
