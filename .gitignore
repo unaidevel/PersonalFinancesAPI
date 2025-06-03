@@ -24,3 +24,7 @@ db.sqlite3
 # Ignore OS files
 .DS_Store
 Thumbs.db
+
+#Ignore sendgrid api key
+sendgrid.env
+
