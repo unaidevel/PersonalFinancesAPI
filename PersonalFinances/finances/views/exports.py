@@ -100,7 +100,7 @@ class ExportTransactionPdf(APIView):
                 y_position = 750
             category = str(row['category'])
             wrapped_category = textwrap.fill(category, width=50)  #With widht the lenght of the category number can be edited
-            c.drawString(100, y_position, f'Date: {row['date_created']} | Amount: {row['amount']}')
+            c.drawString(100, y_position, f"Date: {row['date_created']} | Amount: {row['amount']}")
             y_position -= 20
             c.drawString(100, y_position, f'    Category: {wrapped_category}') #Made it separate to show category entirely
 
