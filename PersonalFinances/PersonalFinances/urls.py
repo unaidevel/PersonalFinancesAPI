@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from dj_rest_auth import urls as rest_auth_urls
-from finances.views import FacebookLogin, GitHubLogin, GoogleLogin
+# from finances.views import FacebookLogin, GitHubLogin, GoogleLogin
 from rest_framework import permissions
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -53,9 +53,9 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('rest-auth/', include(rest_auth_urls)),
     path('auth/registration/', include('dj_rest_auth.registration.urls')),
-    path('auth/facebook', FacebookLogin.as_view(), name='fb_login'),
-    path('auth/github/', GitHubLogin.as_view(), name='github_login'),
-    path('auth/google/', GoogleLogin.as_view(), name='google_login'),
+    # path('auth/facebook', FacebookLogin.as_view(), name='fb_login'),
+    # path('auth/github/', GitHubLogin.as_view(), name='github_login'),
+    # path('auth/google/', GoogleLogin.as_view(), name='google_login'),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     # path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),

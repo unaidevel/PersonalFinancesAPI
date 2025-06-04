@@ -87,23 +87,46 @@ class AdvancedInsights(ListAPIView):
 
     # authentication_classes = [JWTAuthentication]
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+    serializer_class = AdvancedInsightsSerializer
 
     def list(self, request, *args, **kwargs):
-        total_spent_per_month = Transaction.objects.filter(user=request.user).values(month=TruncMonth('date_created')).annotate(total_spent=Sum('amount'))
-        total_sum = Transaction.objects.filter(user=request.user).aggregate(total_transactions=Sum('amount'))
-        yearly_spending = Transaction.objects.filter(user=request.user).values(year=TruncYear('date_created')).annotate(total_spent=Sum('amount'))
-        top_spent_categories = Transaction.objects.filter(user=request.user).values('category__name').annotate(total_spent=Sum('amount')).order_by('-total_spent')[:5]
-        transaction_count_per_category = Transaction.objects.filter(user=request.user).values('category__name').annotate(total_count=Count('id'))
-        upcoming_recurring_transactions = RecurringTransaction.objects.filter(user=request.user, start_date__gte=datetime.now(), start_date__lte=datetime.now() + timedelta(days=30))
+        total_spent_per_month = Transaction.objects.filter(user=request.user).values(
+            month=TruncMonth('date_created')
+        ).annotate(total_spent=Sum('amount'))
+
+        total_sum = Transaction.objects.filter(user=request.user).aggregate(
+            total_transactions=Sum('amount')
+        )
+
+        yearly_spending = Transaction.objects.filter(user=request.user).values(
+            year=TruncYear('date_created')
+        ).annotate(total_spent=Sum('amount'))
+
+        top_spent_categories = Transaction.objects.filter(user=request.user).values(
+            'category__name'
+        ).annotate(total_spent=Sum('amount')).order_by('-total_spent')[:5]
+
+        transaction_count_per_category = Transaction.objects.filter(user=request.user).values(
+            'category__name'
+        ).annotate(total_count=Count('id'))
+
+        upcoming_recurring_transactions = RecurringTransaction.objects.filter(
+            user=request.user,
+            start_date__gte=datetime.now(),
+            start_date__lte=datetime.now() + timedelta(days=30)
+        )
+
+
         data = {
             'total_spent_per_month': total_spent_per_month,
             'total_sum': total_sum,
-            'yearly_spending': yearly_spending,   
+            'yearly_spending': yearly_spending,
             'top_spent_categories': top_spent_categories,
             'transaction_count_per_category': transaction_count_per_category,
             'upcoming_recurring_transactions': upcoming_recurring_transactions,
         }
-        serializer = AdvancedInsightsSerializer(data=data)
+
+        serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data)
     
@@ -111,21 +134,3 @@ class AdvancedInsights(ListAPIView):
 
 
 
-
-"""
-
-Summary of New Insights You Could Add:
-
-    ---Average Spending per Category
-    Yearly Spending Breakdown
-    Spending Trend (Month-over-Month)
-    Top Categories (Most Spent)
-    Transaction Count per Category
-    Budget vs. Actual Spending
-    Spending by Payment Method
-    Upcoming Recurring Transactions
-    Top Spenders (if multi-user)
-    Custom Date Range Spending
-    Spend vs. Income
-    
-"""
