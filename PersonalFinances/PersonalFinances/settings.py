@@ -248,9 +248,9 @@ SIMPLE_JWT = {
 
 
 
+ACCOUNT_EMAIL_VERIFICATION = "none"
 
 
-import os 
 
 
 EMAIL_HOST = os.environ.get('EMAIL_HOST')
