@@ -28,3 +28,5 @@ Thumbs.db
 #Ignore sendgrid api key
 sendgrid.env
 
+#Ignore .env file
+PersonalFinances/.env
