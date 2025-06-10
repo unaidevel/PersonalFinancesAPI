@@ -48,11 +48,10 @@ Diseñada siguiendo las mejores prácticas REST y asegurando un código limpio y
 
 ### 🛠️ Tecnologías Utilizadas
 
-- 🚀 **Django REST Framework**: Desarrollo de API robusta y escalable.
-- 📋 **DRF Serializers & Viewsets**: Simplificación y organización de la lógica de negocio.
+- 🚀 **Django REST Framework**: Desarrollo de API REST.
+- 📋 **DRF Serializers & Viewsets**: Simplificación y organización de la lógica.
 - 🐘 **PostgreSQL**: Base de datos relacional para almacenamiento estructurado.
 - 🔐 **Simple JWT**: Autenticación segura basada en tokens.
-- 🐳 **Docker**: Entornos consistentes para desarrollo y despliegue.
 - ✅ **Django TestCase**: Pruebas automatizadas para garantizar calidad.
 - 💻 **Git & GitHub**: Control de versiones y colaboración.
 
