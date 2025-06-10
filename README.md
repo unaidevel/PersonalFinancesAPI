@@ -8,7 +8,7 @@
 ### 📝 Descripción del Proyecto
 
 Esta API proporciona todas las funcionalidades necesarias para gestionar finanzas personales básicas: autenticación de usuarios, 
-entrada de gastos e ingresos, transacciones concurrentes, categorías personalizables, visualización de balances avanzada, exportación de datos, entre otras funciones. 
+entrada de gastos e ingresos, transacciones concurrentes, objetivos, presupuestos, categorías personalizables, visualización de balances avanzada, exportación de datos, entre otras funciones. 
 Diseñada siguiendo las mejores prácticas REST y asegurando un código limpio y escalable utilizando Django REST Framework.
 
 
@@ -20,17 +20,18 @@ Diseñada siguiendo las mejores prácticas REST y asegurando un código limpio y
 
 #
 ### ▶️ Endpoints principales
-- `/movie/`
-- `/sessions/`
-- `/user/`
-- `/bookings/`
-- `/ratings/`
+- `/transaction/`
+- `/recurring_transactions/`
+- `/goals/`
+- `/category/`
+- `/budget/`
+- `/rest-auth/`
 
 #
 
 ### 📚 Documentación
 - Swagger UI: [https://django-api.unaimunoz.dev/api/swagger/](https://django-api.unaimunoz.dev/api/swagger/)
-- Redoc: [https://cinema-api.unaimunoz.dev/redoc](https://cinema-api.unaimunoz.dev/redoc)
+- Swagger Schema: [https://cinema-api.unaimunoz.dev/api/schema/](https://cinema-api.unaimunoz.dev/api/schema/)
 
 #
 ### ✨ Características Clave
