@@ -29,8 +29,12 @@ Thumbs.db
 sendgrid.env
 
 #Ignore .env file
+<<<<<<< HEAD
 
 .env
 
 __pycache__/
 *.pyc
+=======
+PersonalFinances/.env
+>>>>>>> 04ccb8631ce1ab7eb18a9d1ce140c0bde2e45742
