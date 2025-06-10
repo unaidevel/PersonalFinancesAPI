@@ -2,14 +2,14 @@
 # API de Finanzas Personales con Django 
 
 
-## API RESTful confiable y segura para gestionar finanzas personales. Permite a los usuarios rastrear ingresos y gastos, crear categorías personalizadas y visualizar estadísticas financieras clave. Construida con Django REST Framework y autenticación por tokens, está lista para impulsar aplicaciones de presupuestos o paneles de finanzas personales.
+## API RESTful para gestionar finanzas personales. Permite a los usuarios rastrear ingresos y gastos, crear categorías personalizadas y visualizar estadísticas financieras clave. Construida con Django REST Framework y autenticación por tokens, está lista para impulsar aplicaciones de presupuestos o paneles de finanzas personales.
 
 
 ### 📝 Descripción del Proyecto
 
 Esta API proporciona todas las funcionalidades necesarias para gestionar finanzas personales básicas: autenticación de usuarios, 
-seguimiento de ingresos y gastos, organización por categorías, visualización de balances y exportación de datos. 
-Diseñada como backend para una aplicación de finanzas completa, sigue las mejores prácticas REST y asegura un código limpio y escalable utilizando Django REST Framework.
+entrada de gastos e ingresos, transacciones concurrentes, categorías personalizables, visualización de balances avanzada, exportación de datos, entre otras funciones. 
+Diseñada siguiendo las mejores prácticas REST y asegurando un código limpio y escalable utilizando Django REST Framework.
 
 
 #
