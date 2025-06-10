@@ -28,3 +28,9 @@ Thumbs.db
 #Ignore sendgrid api key
 sendgrid.env
 
+#Ignore .env file
+
+.env
+
+__pycache__/
+*.pyc
